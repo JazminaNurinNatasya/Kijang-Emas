@@ -17,7 +17,7 @@ ggplot(emas, aes(Date, oz)) + geom_line() +labs(title = "Time Series Plot of Gol
                                                 x = "Date", y = "Gold Price")
 autoplot(emas)+labs(title = "Time Series Plot of Kijang Emas Jan 2010 - April 2023", 
                     x = "Date", y = "Kijang Emas Price (1oz)")
-########
+
 # Check the structure of the tsibble
 glimpse(emas)
 
