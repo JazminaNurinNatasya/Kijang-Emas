@@ -13,73 +13,113 @@ emas <- dt %>% mutate(Date=as_date(Date)) %>%
 head(emas)
 
 #plot time series
-ggplot(emas, aes(Date, oz)) + geom_line() +labs(title = "Time Series Plot of Gold Price Jan 2010 - April 2023", 
-                                                x = "Date", y = "Gold Price")
 autoplot(emas)+labs(title = "Time Series Plot of Kijang Emas Jan 2010 - April 2023", 
                     x = "Date", y = "Kijang Emas Price (1oz)")
 
-# Check the structure of the tsibble
-glimpse(emas)
-
+#---------------- Splitting Data ----------------------------#
+## 70/30 ##
 #Determine the split index based on 70% of the data
-n_train <- as.integer(nrow(emas) * 0.75)  #70% for training
+n_train1 <- as.integer(nrow(emas) * 0.70)  #70% for training
 
 #Split the data based on the calculated index
-train_data <- emas[1:n_train, ]  #First 70% of the data for training
-test_data <- emas[(n_train + 1):nrow(emas), ]  #Last 30% for testing
+train_data1 <- emas[1:n_train1, ]  #First 70% of the data for training
+test_data1 <- emas[(n_train1 + 1):nrow(emas), ]  #Last 30% for testing
 
 #Output the lengths to verify the split
-cat("Training Data Length:", nrow(train_data), "\n")
-cat("Testing Data Length:", nrow(test_data), "\n")
+cat("Training Data Length:", nrow(train_data1), "\n")
+cat("Testing Data Length:", nrow(test_data1), "\n")
 
-#Check the first few rows of training and testing sets
-head(train_data)
-head(test_data)
+## 75/25 ##
+#Determine the split index based on 75% of the data
+n_train2 <- as.integer(nrow(emas) * 0.75)  #70% for training
 
-# Optional: Plot to visualize the split
+#Split the data based on the calculated index
+train_data2 <- emas[1:n_train2, ]  #First 75% of the data for training
+test_data2 <- emas[(n_train2 + 1):nrow(emas), ]  #Last 25% for testing
+
+#Output the lengths to verify the split
+cat("Training Data Length:", nrow(train_data2), "\n")
+cat("Testing Data Length:", nrow(test_data2), "\n")
+
+## 80/20 ##
+#Determine the split index based on 80% of the data
+n_train3 <- as.integer(nrow(emas) * 0.80)  #70% for training
+
+#Split the data based on the calculated index
+train_data3 <- emas[1:n_train3, ]  #First 80% of the data for training
+test_data3 <- emas[(n_train3 + 1):nrow(emas), ]  #Last 20% for testing
+
+#Output the lengths to verify the split
+cat("Training Data Length:", nrow(train_data3), "\n")
+cat("Testing Data Length:", nrow(test_data3), "\n")
+
+#Optional: Plot to visualize the split (change the train and test)
 library(ggplot2)
 ggplot() +
-  geom_line(data = train_data, aes(x = Date, y = oz), color = 'blue', size = 1) +
-  geom_line(data = test_data, aes(x = Date, y = oz), color = 'red', size = 1) +
+  geom_line(data = train_data3, aes(x = Date, y = oz), color = 'blue', size = 1) +
+  geom_line(data = test_data3, aes(x = Date, y = oz), color = 'red', size = 1) +
   labs(title = "Kijang Emas (Train vs Test Data)",
        x = "Date", y = "Kijang Emas (oz)") +
   scale_color_manual(values = c("Training" = "blue", "Testing" = "red")) +
   theme_minimal()
 
+#------------------------ Stationary Test ----------------------#
+#stationarity test
+adf.test((train_data3$oz), alternative="stationary", k=0)
+kpss.test(train_data3$oz)
+
+#Differencing if Non-Stationary
+diff_data1 <- diff(log(train_data1$oz))
+diff_data2 <- diff(log(train_data2$oz))
+diff_data3 <- diff(log(train_data3$oz))
+adf.test(diff_data1)  # Check stationarity again
+adf.test(diff_data2)  # Check stationarity again
+adf.test(diff_data3)  # Check stationarity again
+
 #log returns plot
-plot(diff(log(train_data$oz)),type='l', main='log returns plot')
+plot(diff_data1, type='l', main='log returns plot 70:30')
+plot(diff_data2, type='l', main='log returns plot 72:25')
+plot(diff_data3, type='l', main='log returns plot 80:20')
 
-# Check for stationarity and difference the series if needed
-library(tseries)
-adf.test(diff(log(train_data$oz)), alternative="stationary", k=0)
-
-# Train the ARIMA model using auto.arima
+#----------------------- Model Selection ----------------------#
 library(forecast)
-fitARIMA <- auto.arima(diff(log(train_data$oz)), trace=TRUE)
+#Model Selection with AutoARIMA
+model1 <- auto.arima((train_data1$oz), trace=TRUE)
+#Model Selection with AutoARIMA
+model2 <- auto.arima((train_data2$oz), trace=TRUE)
+#Model Selection with AutoARIMA
+model3 <- auto.arima((train_data3$oz), trace=TRUE)
 
 # Print model summary
-summary(fitARIMA)
+summary(model1)  #check AIC,BIC
+summary(model2)  #check AIC,BIC
+summary(model3)  #check AIC,BIC
 
-# Forecasting on the test set
-forecast_length <- length(test_data$oz)
-arima_forecast <- forecast(fitARIMA, h = forecast_length)
+#----------------------- Model Prediction --------------------#
+# Forecasting
+forecasted_values <- forecast(model1, h = 10)
+print(forecasted_values)
+plot(forecasted_values, main = "ARIMA Forecast for Kijang Emas")
+
+# Evaluation
+mse <- mean((forecasted_values$Point_Forecast - test_data)^2)
+rmse <- sqrt(mse)
 
 # Extract predicted values
-predicted_values <- as.numeric(arima_forecast$mean)
+predicted_values <- as.numeric(forecasted_values)
 
 # Create a comparison DataFrame
 comparison_df <- data.frame(
   Date = test_data$Date,
   `Actual Price` = test_data$oz,
-  `Predicted Price` = predicted_values
-)
+  `Predicted Price` = forecasted_values)
 
 # Display comparison
 print(head(comparison_df, 10))
 
 # Plot actual vs predicted values
 plot(test_data$Date, test_data$oz, type = "l", col = "blue", lwd = 2, xlab = "Date", ylab = "Price", main = "Actual vs Predicted Prices (ARIMA)")
-lines(test_data$Date, predicted_values, col = "red", lwd = 2)
+lines(test_data$Date, forecasted_values, col = "red", lwd = 2)
 legend("topleft", legend = c("Actual", "Predicted"), col = c("blue", "red"), lwd = 2)
 
 # Calculate evaluation metrics
