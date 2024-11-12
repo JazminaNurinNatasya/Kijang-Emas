@@ -31,7 +31,7 @@ cat("Testing Data Length:", nrow(test_data1), "\n")
 
 ## 75/25 ##
 #Determine the split index based on 75% of the data
-n_train2 <- as.integer(nrow(emas) * 0.75)  #70% for training
+n_train2 <- as.integer(nrow(emas) * 0.75)  #75% for training
 
 #Split the data based on the calculated index
 train_data2 <- emas[1:n_train2, ]  #First 75% of the data for training
@@ -43,7 +43,7 @@ cat("Testing Data Length:", nrow(test_data2), "\n")
 
 ## 80/20 ##
 #Determine the split index based on 80% of the data
-n_train3 <- as.integer(nrow(emas) * 0.80)  #70% for training
+n_train3 <- as.integer(nrow(emas) * 0.80)  #80% for training
 
 #Split the data based on the calculated index
 train_data3 <- emas[1:n_train3, ]  #First 80% of the data for training
