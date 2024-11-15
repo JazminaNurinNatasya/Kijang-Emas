@@ -16,7 +16,7 @@ head(emas)
 autoplot(emas)+labs(title = "Time Series Plot of Kijang Emas Jan 2010 - April 2023", 
                     x = "Date", y = "Kijang Emas Price (1oz)")
 
-#-------------------- Splitting Data ----------------------------#
+#---------------------- Splitting Data ----------------------------#
 ## 70/30 ##
 #Determine the split index based on 70% of the data
 n_train1 <- as.integer(nrow(emas) * 0.70)  #70% for training
