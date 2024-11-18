@@ -11,6 +11,7 @@ head(dt)
 emas <- dt %>% mutate(Date=as_date(Date)) %>%
   as_tsibble(index=Date) %>% select(Date,oz) 
 head(emas)
+tail(emas)
 
 #plot time series
 autoplot(emas)+labs(title = "Time Series Plot of Kijang Emas Jan 2010 - April 2023", 
