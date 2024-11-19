@@ -13,7 +13,7 @@ emas <- dt %>% mutate(Date=as_date(Date)) %>%
 head(emas)
 tail(emas)
 
-#plot time series
+#plot time series Kijang Emas
 autoplot(emas)+labs(title = "Time Series Plot of Kijang Emas Jan 2010 - April 2023", 
                     x = "Date", y = "Kijang Emas Price (1oz)")
 
