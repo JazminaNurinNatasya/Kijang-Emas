@@ -123,6 +123,7 @@ plot(test_data$Date, test_data$oz, type = "l", col = "blue", lwd = 2, xlab = "Da
 lines(test_data$Date, forecasted_values, col = "red", lwd = 2)
 legend("topleft", legend = c("Actual", "Predicted"), col = c("blue", "red"), lwd = 2)
 
+#----------------------- Model Evaluation --------------------#
 # Calculate evaluation metrics
 mse <- mean((test_data$Price - predicted_values)^2)
 mae <- mean(abs(test_data$Price - predicted_values))
