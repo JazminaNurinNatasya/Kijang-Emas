@@ -96,7 +96,7 @@ summary(model1)  #check AIC,BIC
 summary(model2)  #check AIC,BIC
 summary(model3)  #check AIC,BIC
 
-#----------------------- Model Prediction --------------------#
+#------------------------- Model Prediction --------------------#
 # Forecasting
 forecasted_values <- forecast(model1, h = 10)
 print(forecasted_values)
