@@ -82,7 +82,7 @@ plot(diff_data1, type='l', main='log returns plot 70:30')
 plot(diff_data2, type='l', main='log returns plot 72:25')
 plot(diff_data3, type='l', main='log returns plot 80:20')
 
-#-------------------------- Model Selection ----------------------#
+#------------------------- Model Selection ----------------------#
 library(forecast)
 #Model Selection with AutoARIMA
 model1 <- auto.arima((train_data1$oz), trace=TRUE)
