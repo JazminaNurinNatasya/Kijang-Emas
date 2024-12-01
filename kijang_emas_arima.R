@@ -64,7 +64,7 @@ ggplot() +
   scale_color_manual(values = c("Training" = "blue", "Testing" = "red")) +
   theme_minimal()
 
-#------------------------- Stationary Test ----------------------#
+#--------------------------- Stationary Test ----------------------#
 #stationarity test
 adf.test((train_data3$oz), alternative="stationary", k=0)
 kpss.test(train_data3$oz)
