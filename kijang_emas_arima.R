@@ -7,6 +7,7 @@ library(tidyverse)
 dt <- read.csv(file.choose(), header=T)
 head(dt)
 
+#make sure date in correct format
 #create tsibble
 emas <- dt %>% mutate(Date=as_date(Date)) %>%
   as_tsibble(index=Date) %>% select(Date,oz) 
