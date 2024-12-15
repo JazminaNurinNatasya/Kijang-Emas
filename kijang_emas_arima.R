@@ -63,7 +63,7 @@ ggplot() +
   scale_color_manual(values = c("Training" = "blue", "Testing" = "red")) +
   theme_minimal()
 
-#------------------------ Stationary Test ----------------------------------#
+#--------------------------- Stationary Test ----------------------------------#
 layout(matrix(1:2,ncol=2))
 acf(train_data3$oz)
 pacf(train_data3$oz)
