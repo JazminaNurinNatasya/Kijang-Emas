@@ -114,13 +114,13 @@ summary(model3)  #check AIC,BIC
 AIC(fit3)
 BIC(fit3)
 
-#----------------------- Residual Checking -------------------------------#
+#-------------------------- Residual Checking -------------------------------#
 #residual
 checkresiduals(model3)
 # Perform Ljung-Box test on residuals
 Box.test(residuals(model3), lag = 10, type = "Ljung-Box")
 
-#----------------------- Model Testing ----------------------------------#
+#-------------------------- Model Testing ----------------------------------#
 # Prediction
 # Forecast on test data (using the length of test data)
 test_forecast <- forecast(model3, h = length(test_data3$oz))
